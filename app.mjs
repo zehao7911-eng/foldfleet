@@ -47,7 +47,7 @@ try{
  addEventListener('pageshow',e=>{if(e.persisted)location.reload();});
  $('world').addEventListener('webglcontextlost',e=>{if(disposed)return;e.preventDefault();persist();beforePause=phase;paused=true;audio.setActive(false);$('errorText').textContent='Graphics were interrupted. Your chart is saved. Reload to continue.';$('error').hidden=false;});
  $('world').addEventListener('webglcontextrestored',()=>{if(disposed)return;$('error').hidden=true;redraw=true;positionKey='';if(phase!=='welcome'){paused=true;$('veil').hidden=false;renderMenu();syncUI();}else paused=false;toast('The harbour is restored. Your chart is safe.');last=performance.now();});
- function frame(t){if(disposed)return;requestAnimationFrame(frame);if(document.hidden||paused&&!redraw){last=t;return;}const dt=Math.min(.05,Math.max(0,(t-(last||t))/1000));last=t;
+ function frame(t){if(disposed)return;requestAnimationFrame(frame);if(document.hidden||paused&&!redraw){last=t;return;}const dt=Math.max(0,(t-(last||t))/1000);last=t;
   if(phase==='intro'&&!paused&&art.phaseTime>1.3)phase='play';if(phase==='celebrate'&&!paused){celebrateTime+=dt;if(celebrateTime>2.5)showResult();}
   art.step(paused?0:dt,{intro:phase==='intro'||phase==='welcome',celebrate:phase==='celebrate'||phase==='result',reduced,attract:phase==='welcome'});positions();$('intro').classList.toggle('show',phase==='intro'&&!paused);document.body.dataset.phase=paused?'paused':phase;audio.update();redraw=false;
  }requestAnimationFrame(frame);
